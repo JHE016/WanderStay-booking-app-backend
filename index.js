@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { default: mongoose } = require('mongoose');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User.js');
@@ -24,6 +25,7 @@ app.use(cors({
     credentials: true,
     origin: allowedOrigins,
 }));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 (async () => {
     try {
@@ -185,6 +187,9 @@ app.get('/places/:id', async (req, res) => {
     const { id } = req.params;
     try {
         const placeDoc = await Place.findById(id);
+        if (!placeDoc) {
+            return res.status(404).json({ message: 'Place not found' });
+        }
         res.json(placeDoc);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch place' });
@@ -264,7 +269,11 @@ app.get('/bookings', async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(4000, () => {
-    console.log('Server is running on port 4000');
-});
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+  
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
