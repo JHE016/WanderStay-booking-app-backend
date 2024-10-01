@@ -15,13 +15,14 @@ const fs = require('fs');
 
 const bcryptSalt = bcrypt.genSaltSync(10);
 const jwtSecret = process.env.JWT_SECRET || 'defaultSecret'; // Use environment variable for security
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL,
+    origin: allowedOrigins,
 }));
 
 (async () => {
