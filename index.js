@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: 'https://wander-stay-a51091.netlify.app/',
+    origin: 'https://wander-stay-a51091.netlify.app',
 }));
 app.use(express.static(path.join(__dirname, 'dist')));
 
